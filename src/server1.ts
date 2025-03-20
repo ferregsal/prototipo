@@ -54,3 +54,28 @@ app.post('/products', (req, res) => {
   // Devolvemos respuesta con el producto y estado 201 (creado).
   res.status(201).json(newProduct);
 });
+
+// Método Patch para actualizar los datos de un producto existente
+app.patch('/products/:id', (req, res) => {
+  // Recibe el Id desde los parámetros de la URL
+  const { id } = req.params;
+
+  // Busca el índice del producto
+  const index = productList.findIndex((p) => p.id === id);
+
+  // Si encuentra el producto, actualiza sus datos
+  if (index > -1) {
+    // Actualiza los campos que aparecen en el body de la solicitud
+    productList[index] = {
+      ...productList[index],
+      ...req.body, // Sustituye los datos con los nuevos datos enviados en el body de la solicitud
+      updated_at: new Date(), // Actualiza la fecha actualización a la actual
+    };
+
+    // Devuelve el producto actualizado en la respuesta acompañado del estado 200 (OK)
+    res.status(200).json(productList[index]);
+  } else {
+    // Si no existe el producto, devuelve un error 404.
+    res.status(404).json({ error: 'Product not found' });
+  }
+});
