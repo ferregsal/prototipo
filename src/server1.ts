@@ -75,7 +75,31 @@ app.patch('/products/:id', (req, res) => {
     // Devuelve el producto actualizado en la respuesta acompañado del estado 200 (OK)
     res.status(200).json(productList[index]);
   } else {
-    // Si no existe el producto, devuelve un error 404.
+    // Si no existe el producto, devuelve un error 404
     res.status(404).json({ error: 'Product not found' });
   }
+});
+
+//Método Delete, elimina un producto existente según su Id
+app.delete('/products/:id', (req, res) => {
+  // Recibe el Id desde los parámetros de la URL
+  const { id } = req.params;
+
+  //Aplica un filtro al array para excluir el producto con el Id recibido
+  const initialLength = productList.length;
+  productList = productList.filter((p) => p.id !== id);
+
+  //Si ha cambiado la longitud del array, se ha eliminado el producto
+  if (productList.length < initialLength) {
+    res.status(204).send(); //Mensaje de estado exitoso sin contenido
+  } else {
+    //Si el producto no existe, devuelve un error 404 (No encontrado)
+    res.status(404).json({ error: 'Product not found' });
+  }
+});
+
+//Inicializamos el servidor en el puerto 3000
+const PORT = 3000;
+app.listen(PORT, () => {
+  console.log(`El servidor está activo en http://localhost:${PORT}`);
 });
