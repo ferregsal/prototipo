@@ -33,3 +33,24 @@ app.get('/products/:id', (req, res) => {
     res.status(404).json({ error: 'Product not found' });
   }
 });
+
+// Método post, para crear un nuevo producto
+app.post('/products', (req, res) => {
+  // Genera un nuevo Id aleatorio para el producto.
+  const newId = crypto.randomUUID().toString();
+
+  // Crea el nuevo producto con los datos recibidos en el body de la solicitud.
+  const newProduct = {
+    id: newId,
+    ...req.body,
+    is_active: true, // Establecemos su estado por defecto como activo
+    created_at: new Date(), // Guardamos la fecha actual de creación
+    updated_at: new Date(), // Guardamos la fecha actual de actualización
+  };
+
+  // Añadimos el producto crado al array de productos.
+  productList.push(newProduct);
+
+  // Devolvemos respuesta con el producto y estado 201 (creado).
+  res.status(201).json(newProduct);
+});
